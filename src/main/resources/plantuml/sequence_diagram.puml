@@ -1,0 +1,15 @@
+@startuml
+
+actor User as u
+participant "Controller" as c
+participant "Service" as s
+participant "Repository" as r
+
+u -> c : POST /users
+c -> s : createUser(user)
+s -> r : save(user)
+r --> s : user saved
+s --> c : user created
+c --> u : 201 Created
+
+@enduml

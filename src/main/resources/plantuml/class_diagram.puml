@@ -1,0 +1,49 @@
+@startuml
+
+package "com.example.h2demo.model" {
+    class User {
+        Long id
+        String name
+        String email
+        +getId()
+        +setId(Long id)
+        +getName()
+        +setName(String name)
+        +getEmail()
+        +setEmail(String email)
+    }
+}
+
+package "com.example.h2demo.controller" {
+    class UserController {
+        - UserService userService
+        +getUser(Long id)
+        +createUser(User user)
+        +updateUser(Long id, User user)
+        +deleteUser(Long id)
+    }
+}
+
+package "com.example.h2demo.service" {
+    class UserService {
+        - UserRepository userRepository
+        +getUserById(Long id)
+        +saveUser(User user)
+        +updateUser(Long id, User user)
+        +deleteUser(Long id)
+    }
+}
+
+package "com.example.h2demo.repository" {
+    interface UserRepository {
+        +save(User user)
+        +findById(Long id)
+        +deleteById(Long id)
+    }
+}
+
+UserController --> UserService : uses
+UserService --> UserRepository : uses
+UserRepository --> User : manages
+
+@enduml

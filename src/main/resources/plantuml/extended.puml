@@ -1,0 +1,24 @@
+@startuml
+
+actor User as u
+participant "Controller" as c
+participant "UserDTO" as dto
+participant "Mapper" as mpr
+participant "User Model" as model
+participant "Service" as s
+participant "Repository" as r
+
+u -> c : POST /users (user DTO data)
+c -> dto : Create UserDTO instance
+dto --> c : UserDTO instance created
+c -> mpr : Map UserDTO to User Model
+mpr -> model : Create new User instance from UserDTO
+model --> mpr : User instance created
+mpr --> c : User Model returned
+c -> s : createUser(User)
+s -> r : save(User)
+r --> s : user saved
+s --> c : user created
+c --> u : 201 Created
+
+@enduml
