@@ -1,0 +1,89 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.2'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'org.asciidoctor.jvm.convert' version '4.0.3' // Optional, for embedding in Asciidoctor
+//	id 'plantuml-gradle-plugin' version '0.1' // PlantUML plugin
+}
+
+group = 'com.self'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	gradlePluginPortal()
+	mavenCentral()
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+// Custom task to run PlantUML
+task generateUML(type: JavaExec) {
+	group = 'documentation'
+	description = 'Generate UML diagrams using PlantUML'
+
+	// Specify the PlantUML classpath
+	classpath = sourceSets.main.runtimeClasspath
+
+	// Set the main class for PlantUML
+	mainClass.set('net.sourceforge.plantuml.Run')
+
+	// Arguments for PlantUML
+	args = [
+			'-tpng', // Output format (PNG)
+			'src/main/resources/plantuml/*.puml', // Input files
+			'-o', "${buildDir}/generated/plantuml" // Output directory
+	]
+}
+
+// Make the 'generateUML' task run before 'build'
+build.dependsOn generateUML
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-graphql'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework:spring-webflux'
+	testImplementation 'org.springframework.graphql:spring-graphql-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// PlantUML dependencies (optional, for custom usage)
+	implementation 'net.sourceforge.plantuml:plantuml:1.2024.6'
+}
+
+// PlantUML configuration
+/*plantuml {
+	outputDirectory = file("${buildDir}/generated/plantuml")
+	format = 'png'
+	sourceDir = file('src/main/resources/plantuml')
+}*/
+
+// Asciidoctor configuration (optional)
+asciidoctor {
+	dependsOn generateUML
+	sources {
+		include 'docs/**/*.adoc'
+	}
+	attributes 'plantumlDir': "${buildDir}/generated/plantuml"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
