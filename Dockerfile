@@ -18,4 +18,4 @@ RUN ./gradlew bootJar --no-daemon
 EXPOSE 8080
 
 # Step 7: Set the default command to run the JAR file
-CMD ["java", "-jar", "/app/build/libs/learning-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "/app/build/libs/java-backend-0.0.1-SNAPSHOT.jar"]

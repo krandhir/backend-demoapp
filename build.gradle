@@ -58,6 +58,14 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+	// ActiveMQ Starter for Spring Boot
+	implementation 'org.springframework.boot:spring-boot-starter-activemq'
+
+	// ActiveMQ client library for Jakarta-based JMS
+	implementation 'org.apache.activemq:activemq-client:5.18.3'
+
+	// Jakarta JMS API
+	implementation 'jakarta.jms:jakarta.jms-api:3.1.0'
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
